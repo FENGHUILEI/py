@@ -8,9 +8,8 @@ from selenium.webdriver.chrome.service import Service
 import time
 
 
-
-
 try:
+    
     time1 = time.time()
 
     options = Options()
