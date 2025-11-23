@@ -11,6 +11,7 @@ import time
 try:
     
     begin_time = time.time()
+    print('程序开始运行')
 
     options = Options()
     options.add_argument('--headless=new')
@@ -18,13 +19,21 @@ try:
     driver = webdriver.Chrome(options=options, service=service)
 
     driver.get('https://weather.cma.cn/web/weather/54846.html')
-
-    temperature = WebDriverWait(driver, 10).until(
+    wait = WebDriverWait(driver, 10)
+    temperature = wait.until(
         EC.presence_of_element_located(
             (By.CSS_SELECTOR, '#temperature')
         )
     ).text
     print('当前温度:', temperature)
+
+    day = wait.until(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, '[class="pull-left day actived"]')     
+        )
+    ).text
+    print('当前日期:', type(day))
+
 except TimeoutException:
     print('等待超时：未能在指定时间内定位到温度元素')
 except Exception as e:
