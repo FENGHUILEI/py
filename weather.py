@@ -10,34 +10,20 @@ import time
 
 try:
     
-    time1 = time.time()
+    begin_time = time.time()
 
     options = Options()
     options.add_argument('--headless=new')
     service = Service(executable_path='./chromedriver.exe')
     driver = webdriver.Chrome(options=options, service=service)
 
-
-    time2 = time.time()
-
-    print('启动浏览器耗时:', time2 - time1, '秒')
     driver.get('https://weather.cma.cn/web/weather/54846.html')
 
-    time3 = time.time() 
-
-    print('加载页面耗时:', time3 - time2, '秒')
-    time4 = time.time()
-
-    temperature_element = WebDriverWait(driver, 10).until(
+    temperature = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
             (By.CSS_SELECTOR, '#temperature')
         )
-    )
-
-    time5 = time.time()
-
-    print('定位温度元素耗时:', time5 - time4, '秒')
-    temperature = temperature_element.text
+    ).text
     print('当前温度:', temperature)
 except TimeoutException:
     print('等待超时：未能在指定时间内定位到温度元素')
@@ -45,4 +31,5 @@ except Exception as e:
     print('发生错误:', repr(e))
 finally:
     driver.close()
-    print('总运行时间:', time5 - time1, '秒')
+    end_time = time.time()
+    print('总运行时间:', end_time - begin_time, '秒')
