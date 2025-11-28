@@ -11,7 +11,7 @@ import time
 try:
     
     begin_time = time.time()
-    print('程序开始运行')
+    print('程序开始运行...')
 
     options = Options()
     options.add_argument('--headless=new')
@@ -20,19 +20,23 @@ try:
 
     driver.get('https://weather.cma.cn/web/weather/54846.html')
     wait = WebDriverWait(driver, 10)
-    temperature = wait.until(
-        EC.presence_of_element_located(
-            (By.CSS_SELECTOR, '#temperature')
-        )
-    ).text
-    print('当前温度:', temperature)
 
-    day = wait.until(
+    info_dict = dict()
+
+    info = wait.until(
         EC.presence_of_element_located(
             (By.CSS_SELECTOR, '[class="pull-left day actived"]')     
         )
-    ).text
-    print('当前日期:', type(day))
+    ).text.split('\n')
+
+    info_dict['天气'] = info[2]
+    info_dict['风向'] = info[3]
+    info_dict['风力'] = info[4]
+    info_dict['最高温'] = info[5]
+    info_dict['最低温'] = info[6]
+
+    for key, value in info_dict.items():
+        print(f'{key}: {value}')
 
 except TimeoutException:
     print('等待超时：未能在指定时间内定位到温度元素')
